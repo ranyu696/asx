@@ -176,16 +176,41 @@ export async function fetchTagData(slug: string): Promise<Tag> {
 
 // 重构 fetchVideoData 函数
 export async function fetchVideoData(slug: string): Promise<Video> {
-  const videos = await fetchData<Video[]>("/videos", {
-    filters: { aka: { $eq: slug } },
-    populate: "*",
-  });
+  async function tryFetch(attemptSlug: string): Promise<Video | null> {
+    const videos = await fetchData<Video[]>("/videos", {
+      filters: { aka: { $eq: attemptSlug } },
+      populate: "*",
+    });
 
-  if (videos.length === 0) {
+    return videos.length > 0 ? videos[0] : null;
+  }
+
+  // 如果是纯数字，直接查询
+  if (/^\d+$/.test(slug)) {
+    const video = await tryFetch(slug);
+    if (video) return video;
     throw new Error(`Video not found: ${slug}`);
   }
 
-  return videos[0];
+  // 非数字情况，统一转换为大写
+  const upperCaseSlug = slug.toUpperCase();
+  
+  // 尝试查询转换后的 slug
+  let video = await tryFetch(upperCaseSlug);
+  if (video) return video;
+
+  // 如果查询失败，尝试添加 "-1" 后缀（除非已经以 -1 或 -2 结尾）
+  if (!upperCaseSlug.endsWith('-1') && !upperCaseSlug.endsWith('-2')) {
+    video = await tryFetch(upperCaseSlug + '-1');
+    if (video) return video;
+  }
+
+  // 如果添加 "-1" 后缀仍然失败，尝试添加 "-A" 后缀
+  video = await tryFetch(upperCaseSlug + '-A');
+  if (video) return video;
+
+  // 如果所有尝试都失败，抛出错误
+  throw new Error(`Video not found after multiple attempts: ${slug}`);
 }
 
 // 重构 fetchWebsiteData 函数

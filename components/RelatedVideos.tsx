@@ -38,12 +38,9 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({
                       {video.attributes.originalname}
                     </h4>
                   </div>
-                  <Link
-                    className="text-white text-xs hover:underline"
-                    href={`/${video.attributes.aka}`}
-                  >
+                  <span className="text-white text-xs hover:underline">
                     查看详情
-                  </Link>
+                  </span>
                 </div>
               </CardBody>
             </Link>
