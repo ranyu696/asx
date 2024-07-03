@@ -43,20 +43,21 @@ export default function VideoPlayer({
 
     try {
       const response = await fetch(apiUrl, {
-        method: 'GET', // 改为POST请求
+        method: "GET", // 改为POST请求
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update play count');
+        throw new Error("Failed to update play count");
       }
 
       const result = await response.json();
-      console.log('Play count updated:', result);
+
+      console.log("Play count updated:", result);
     } catch (error) {
-      console.error('Error updating play count:', error);
+      console.error("Error updating play count:", error);
     }
   }
 
@@ -70,8 +71,8 @@ export default function VideoPlayer({
       aspectRatio="16/9"
       src={videoURL}
       title={title}
-      onProviderChange={onProviderChange}
       onPlay={handlePlay} // 监听 onPlay 事件
+      onProviderChange={onProviderChange}
     >
       <MediaProvider>
         <Poster

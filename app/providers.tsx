@@ -21,6 +21,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
   useEffect(() => {
     const fetchAnnouncement = async () => {
       const isClient = typeof window !== "undefined";
+
       if (!isClient) return;
 
       const storage = isClient ? window.localStorage : null;

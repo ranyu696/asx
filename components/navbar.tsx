@@ -1,7 +1,6 @@
 import {
   Navbar as NextUINavbar,
   NavbarContent,
-  NavbarMenu,
   NavbarMenuToggle,
   NavbarBrand,
   NavbarItem,
@@ -11,28 +10,12 @@ import Image from "next/image";
 import React from "react";
 
 import { ThemeSwitch } from "@/components/theme-switch";
+import { Category } from "@/types";
 
 import NavbarItemComponent from "./NavbarItem";
 import SearchForm from "./SearchForm";
 import BookmarkButton from "./BookmarkButton";
-
-// 定义 categories 的 TypeScript 接口
-interface Category {
-  id: string;
-  attributes: {
-    name: string;
-    slug?: string;
-    subcategories?: {
-      data: Array<{
-        id: string;
-        attributes: {
-          name: string;
-          slug: string;
-        };
-      }>;
-    };
-  };
-}
+import NavMenu from "./NavMenu";
 
 interface NavbarProps {
   categories: Category[];
@@ -83,14 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({ categories }) => {
         <NavbarMenuToggle />
       </NavbarContent>
 
-      <NavbarMenu>
-        <SearchForm />
-        <div className="mx-4 mt-2 flex flex-col gap-2">
-          {categories.map((category) => (
-            <NavbarItemComponent key={category.id} category={category} />
-          ))}
-        </div>
-      </NavbarMenu>
+      <NavMenu categories={categories} />
     </NextUINavbar>
   );
 };

@@ -12,23 +12,7 @@ import {
 import { Button } from "@nextui-org/button";
 
 import { ChevronDown } from "@/components/icons";
-// 定义 categories 的 TypeScript 接口
-interface Category {
-  id: string;
-  attributes: {
-    name: string;
-    slug?: string;
-    subcategories?: {
-      data: Array<{
-        id: string;
-        attributes: {
-          name: string;
-          slug: string;
-        };
-      }>;
-    };
-  };
-}
+import { Category } from "@/types";
 
 const NavbarItemComponent: React.FC<{ category: Category }> = ({
   category,

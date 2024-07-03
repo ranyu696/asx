@@ -23,8 +23,6 @@ const SearchForm = () => {
   return (
     <form onSubmit={handleSubmit}>
       <Input
-        id="search" // 添加 id 属性
-        name="search" // 添加 name 属性
         aria-label="Search"
         classNames={{
           inputWrapper: "bg-default-100",
@@ -35,7 +33,9 @@ const SearchForm = () => {
             K
           </Kbd>
         }
+        id="search" // 添加 id 属性
         labelPlacement="outside"
+        name="search" // 添加 name 属性
         placeholder="Search..."
         startContent={
           <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />

@@ -27,13 +27,13 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, websiteImageURL }) => {
       <CardBody className="p-0 relative w-full aspect-w-16 aspect-h-9 h-40 sm:h-48">
         <Link href={`/${video.attributes.aka}`}>
           <Image
+            fill
             alt={video.attributes.originalname}
             className="object-cover"
-            fill
             priority={true}
             quality={80}
-            src={`${websiteImageURL}${video.attributes.poster2.url}`}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            src={`${websiteImageURL}${video.attributes.poster2.url}`}
           />
 
           <Chip

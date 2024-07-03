@@ -1,11 +1,13 @@
 // @ts-check
-const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
+const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
 
 /**
  * @type {import('next').NextConfig}
  */
 module.exports = async (phase, { defaultConfig }) => {
-  const resWebsite = await fetch('https://strapi.xiaoxinlook.cc/api/websites/1?fields=imageURL');
+  const resWebsite = await fetch(
+    "https://strapi.xiaoxinlook.cc/api/websites/1?fields=imageURL",
+  );
   const dataWebsite = await resWebsite.json();
   const websiteImageURL = dataWebsite.data.attributes.imageURL;
 
@@ -16,19 +18,19 @@ module.exports = async (phase, { defaultConfig }) => {
     images: {
       remotePatterns: [
         {
-          protocol: 'https',
+          protocol: "https",
           hostname: imageHostname,
-          port: '',
-          pathname: '/**',
+          port: "",
+          pathname: "/**",
         },
       ],
       minimumCacheTTL: 6000,
-      formats: ['image/avif', 'image/webp'],
-      contentDispositionType: 'inline',
+      formats: ["image/avif", "image/webp"],
+      contentDispositionType: "inline",
     },
     experimental: {
-        optimizePackageImports: ['@vidstack/react'],
-      },
+      optimizePackageImports: ["@vidstack/react"],
+    },
   };
 
   if (phase === PHASE_DEVELOPMENT_SERVER) {

@@ -1,97 +1,63 @@
-import qs from "qs";
 import { Metadata } from "next";
 import Script from "next/script";
 
 import { title, subtitle } from "@/components/primitives";
 import VideoCard from "@/components/VideoCard";
 import PaginationComponent from "@/components/Pagination";
+import { PageParams } from "@/types";
+import { fetchWebsiteData, searchVideos } from "@/config/api";
 
 export async function generateMetadata({
   params,
 }: {
-  params: { page: string[] };
+  params: PageParams;
 }): Promise<Metadata> {
   const [slug, page] = params.page;
   const searchSlug = decodeURIComponent(slug);
-  const pageNumber = parseInt(page) || 1; // 当前页码
+  const pageNumber = parseInt(page) || 1;
 
-  const resWebsite = await fetch(
-    "https://strapi.xiaoxinlook.cc/api/websites/1?fields=name&populate[seo][populate][0]=metaSocial",
-  );
-  const dataWebsite = await resWebsite.json();
-  const websiteName = dataWebsite.data.attributes.name;
-  const seo = dataWebsite.data.attributes.seo;
+  const websiteData = await fetchWebsiteData();
+  const { name: websiteName, seo } = websiteData.attributes;
 
   return {
     title: `"${searchSlug}" 搜索结果 - 第${pageNumber}页`,
     description: `探索与 "${searchSlug}" 相关的视频，第${pageNumber}页`,
     openGraph: {
-      title: `"${searchSlug}" 搜索结果 - 第${page}页 | ${websiteName}`,
+      title: `"${searchSlug}" 搜索结果 - 第${pageNumber}页 | ${websiteName}`,
       description: `探索与 "${searchSlug}" 相关的视频，第${pageNumber}页`,
       type: "website",
       url: `${seo.canonicalURL}/search/${slug}/${pageNumber}`,
     },
   };
 }
-export default async function CategoryPage({
-  params,
-}: {
-  params: { page: string[] };
-}) {
+
+export default async function SearchPage({ params }: { params: PageParams }) {
   const [slug, page] = params.page;
   const searchSlug = decodeURIComponent(slug);
-  const pageNumber = parseInt(page) || 1; // 当前页码
+  const pageNumber = parseInt(page) || 1;
   const pageSize = 20;
 
-  const resWebsite = await fetch(
-    "https://strapi.xiaoxinlook.cc/api/websites/1?fields=imageURL&populate=categories&populate[seo][populate][0]=metaSocial",
+  const websiteData = await fetchWebsiteData();
+  const {
+    imageURL: websiteImageURL,
+    seo,
+    name: websiteName,
+  } = websiteData.attributes;
+  const websiteCategories = websiteData.attributes.categories.data.map(
+    (category) => category.id,
   );
-  const dataWebsite = await resWebsite.json();
-  const websiteImageURL = dataWebsite.data.attributes.imageURL;
-  const websiteCategories = dataWebsite.data.attributes.categories.data.map(
-    (category: { id: any }) => category.id,
+
+  const videoData = await searchVideos(
+    searchSlug,
+    websiteCategories,
+    pageNumber,
+    pageSize,
   );
-  const seo = dataWebsite.data.attributes.seo;
-  const websiteName = dataWebsite.data.attributes.name;
+  const videos = videoData.data;
 
-  const queryParams = {
-    filters: {
-      category: {
-        id: {
-          $in: websiteCategories,
-        },
-      },
-      originalname: {
-        $containsi: searchSlug,
-      },
-    },
-    fields: ["originalname", "duration", "aka"],
-    populate: {
-      poster2: {
-        fields: ["url", "width", "height"],
-      },
-      category: {
-        fields: ["name"],
-      },
-    },
-    pagination: {
-      page: pageNumber,
-      pageSize: pageSize,
-    },
-  };
-
-  const queryString = qs.stringify(queryParams, { encodeValuesOnly: true });
-
-  const resVideos = await fetch(
-    `https://strapi.xiaoxinlook.cc/api/videos?${queryString}`,
-  );
-  const dataVideos = await resVideos.json();
-  const Videos = dataVideos.data;
-
-  const totalCount = dataVideos.meta.pagination.total;
+  const totalCount = videoData.meta.pagination.total;
   const totalPages = Math.ceil(totalCount / pageSize);
 
-  // JSON-LD 结构化数据
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SearchResultsPage",
@@ -107,8 +73,8 @@ export default async function CategoryPage({
       "@type": "Thing",
       name: searchSlug,
     },
-    numberOfItems: Videos.length,
-    itemListElement: Videos.map((video: any, index: number) => ({
+    numberOfItems: videos.length,
+    itemListElement: videos.map((video, index) => ({
       "@type": "ListItem",
       position: index + 1,
       item: {
@@ -120,7 +86,7 @@ export default async function CategoryPage({
     })),
   };
 
-  if (Videos.length === 0) {
+  if (videos.length === 0) {
     return (
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
         <div className="inline-block max-w-lg text-center justify-center">
@@ -149,7 +115,7 @@ export default async function CategoryPage({
         </div>
         <div className="container mx-auto">
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {Videos.map((video: any) => (
+            {videos.map((video) => (
               <VideoCard
                 key={video.id}
                 video={video}

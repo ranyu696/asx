@@ -23,12 +23,14 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
   };
 
   return (
-    <Pagination
-      color="warning"
-      initialPage={pageNumber}
-      total={totalPages}
-      onChange={handlePageChange}
-    />
+    <div className="flex justify-center mt-8">
+      <Pagination
+        color="warning"
+        initialPage={pageNumber}
+        total={totalPages}
+        onChange={handlePageChange}
+      />
+    </div>
   );
 };
 

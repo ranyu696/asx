@@ -52,7 +52,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
         <input
           {...getInputProps({
             id: "theme-switch", // Add id attribute
-            name: "theme-switch" // Add name attribute
+            name: "theme-switch", // Add name attribute
           })}
         />
       </VisuallyHidden>
