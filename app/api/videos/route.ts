@@ -1,50 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const STRAPI_URL = "http://172.18.0.5:1337/api/videos";
+const STRAPI_URL = process.env.STRAPI_API_URL;
+const VIDEOS_ENDPOINT = "/api/videos";
+
+async function fetchVideoData(id: string) {
+  const response = await fetch(`${STRAPI_URL}${VIDEOS_ENDPOINT}/${id}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to fetch video data: ${response.statusText}`);
+  }
+  return response.json();
+}
+
+async function updateVideoCount(id: string, newCount: number) {
+  const response = await fetch(`${STRAPI_URL}${VIDEOS_ENDPOINT}/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ data: { count: newCount } }),
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to update video count: ${response.statusText}`);
+  }
+  return response.json();
+}
 
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const id = searchParams.get("id");
-
+  const id = request.nextUrl.searchParams.get("id");
   if (!id) {
     return NextResponse.json({ error: "ID is required" }, { status: 400 });
   }
 
   try {
-    // 获取当前 count 值
-    const getResponse = await fetch(`${STRAPI_URL}/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!getResponse.ok) {
-      throw new Error("Failed to fetch video data");
-    }
-
-    const videoData = await getResponse.json();
+    const videoData = await fetchVideoData(id);
     const currentCount = videoData.data.attributes.count || 0;
-
-    // 更新 count 值
     const newCount = currentCount + 1;
-    const putResponse = await fetch(`${STRAPI_URL}/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        data: {
-          count: newCount,
-        },
-      }),
-    });
-
-    if (!putResponse.ok) {
-      throw new Error("Failed to update video count");
-    }
-
-    const updatedData = await putResponse.json();
+    
+    const updatedData = await updateVideoCount(id, newCount);
 
     return NextResponse.json({
       message: "Count updated successfully",
@@ -52,10 +45,9 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error:", error);
-
     return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
+      { error: error instanceof Error ? error.message : "Internal server error" },
+      { status: 500 }
     );
   }
 }
