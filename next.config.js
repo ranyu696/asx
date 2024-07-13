@@ -5,12 +5,13 @@ const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
  * @type {import('next').NextConfig}
  */
 module.exports = async (phase, { defaultConfig }) => {
+  const STRAPI_API_URL = process.env.STRAPI_API_URL || "http://172.18.0.5:1337";
+  
   const resWebsite = await fetch(
-    "http://172.18.0.5:1337/api/websites/1?fields=imageURL",
+    `${STRAPI_API_URL}/api/websites/1?fields=imageURL`,
   );
   const dataWebsite = await resWebsite.json();
   const websiteImageURL = dataWebsite.data.attributes.imageURL;
-
   const imageHostname = new URL(websiteImageURL).hostname;
 
   const nextConfig = {
