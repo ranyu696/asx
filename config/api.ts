@@ -9,7 +9,7 @@ import {
   VideoListResponse,
 } from "@/types";
 
-const BASE_URL = "https://strapi.xiaoxinlook.cc/api";
+const BASE_URL = "http://172.18.0.5:1337/api";
 
 // 改进 StrapiResponse 类型以更好地匹配实际返回的数据结构
 interface StrapiResponse<T> {

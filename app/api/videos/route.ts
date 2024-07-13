@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const STRAPI_URL = "https://strapi.xiaoxinlook.cc/api/videos";
+const STRAPI_URL = "http://172.18.0.5:1337/api/videos";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;

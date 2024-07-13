@@ -27,7 +27,7 @@ const NavMenu: React.FC<{ categories: Category[] }> = ({ categories }) => {
                     <NavbarMenuItem key={subCategory.id}>
                       <Link
                         className="w-full"
-                        href={`/category/${category.attributes.slug}/${subCategory.attributes.slug}`}
+                        href={`/category/${subCategory.attributes.slug}`}
                       >
                         {subCategory.attributes.name}
                       </Link>
