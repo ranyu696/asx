@@ -105,7 +105,6 @@ export default async function RootLayout({
     googleAnalyticsId,
     PPURL,
     MetrikaID,
-    advertisementCode,
     email,
     links,
   } = websiteDetails.attributes;
@@ -135,11 +134,10 @@ export default async function RootLayout({
               <Footer email={email} links={links.data} />
             </div>
           </Providers>
-          {advertisementCode && typeof advertisementCode === "string" && (
-            <Script id="advertisementCode" strategy="lazyOnload">
-              {advertisementCode}
-            </Script>
-          )}
+          <Script
+          src="/script.js"
+          strategy="lazyOnload"
+        />
         </YandexMetrica>
       </body>
     </html>

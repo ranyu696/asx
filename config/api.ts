@@ -385,7 +385,6 @@ export async function fetchWebsiteDetails(): Promise<WebsiteData> {
       "email",
       "PPURL",
       "MetrikaID",
-      "advertisementCode",
       "announcement",
     ],
     populate: ["links"],
