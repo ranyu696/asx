@@ -21,7 +21,7 @@ export async function GET() {
 
     return NextResponse.json({ announcement });
   } catch (error) {
-    console.error("获取公告失败:", error.message);
+    console.error("获取公告失败:", error instanceof Error ? error.message : String(error));
     return NextResponse.json({ error: "获取公告失败" }, { status: 500 });
   }
 }
