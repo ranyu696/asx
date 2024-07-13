@@ -39,7 +39,7 @@ async function fetchAPI<T>(
   params: QueryParams = {},
 ): Promise<StrapiResponse<T>> {
   const queryString = qs.stringify(params, { encodeValuesOnly: true });
-  const url = `${BASE_URL}${endpoint}${queryString ? `?${queryString}` : ""}`;
+  const url = `${BASE_URL}/api${endpoint}${queryString ? `?${queryString}` : ""}`;
 
   console.log(`Fetching URL: ${url}`);
 
