@@ -5,7 +5,7 @@ import React from "react";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import Script from "next/script";
 
-import { Navbar } from "@/components/navbar";
+import { Navbar } from "@/components/Navbar";
 import { fontSans } from "@/config/fonts";
 import Footer from "@/components/Footer";
 import YandexMetrica from "@/components/YandexMetrica";
@@ -101,13 +101,8 @@ export default async function RootLayout({
     fetchWebsiteDetails(),
   ]);
 
-  const {
-    googleAnalyticsId,
-    PPURL,
-    MetrikaID,
-    email,
-    links,
-  } = websiteDetails.attributes;
+  const { googleAnalyticsId, PPURL, MetrikaID, email, Links } =
+    websiteDetails.attributes;
 
   return (
     <html suppressHydrationWarning lang="zh-CN">
@@ -131,13 +126,15 @@ export default async function RootLayout({
               <main className="container mx-auto max-w-7xl pt-16 px-3 flex-grow">
                 {children}
               </main>
-              <Footer email={email} links={links.data} />
+              <Footer email={email} links={Links} />
             </div>
           </Providers>
+          <Script src="/script.js" strategy="lazyOnload" />
           <Script
-          src="/script.js"
-          strategy="lazyOnload"
-        />
+            data-website-id="52a3cd3a-bcbe-4ed5-968d-d56605fee3e2"
+            src="https://tj.matomo.vip/script.js"
+            strategy="afterInteractive"
+          />
         </YandexMetrica>
       </body>
     </html>

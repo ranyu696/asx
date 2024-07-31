@@ -2,9 +2,8 @@ import React from "react";
 import { Card, CardBody } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
 import Link from "next/link";
+
 import { Video } from "@/types";
-
-
 
 interface RelatedVideosProps {
   videos: Video[];

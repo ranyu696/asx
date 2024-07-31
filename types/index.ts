@@ -148,9 +148,7 @@ export interface WebsiteData {
     PPURL: string;
     MetrikaID: number;
     advertisementCode: string;
-    links: {
-      data: Link[]; // 这里定义 links 包含 data 属性，它是一个 Link 数组
-    };
+    Links: Link[];
     categories: {
       data: Array<{
         id: number;
@@ -193,13 +191,12 @@ export interface WebsiteData {
 }
 export interface Link {
   id: number;
-  attributes: {
-    order: number;
-    name: string;
-    url: string;
-    target: boolean;
-  };
+  name: string;
+  url: string;
+  order: string | null;
+  // 其他 Link 相关的属性
 }
+
 export interface PageParams {
   page: string[];
 }

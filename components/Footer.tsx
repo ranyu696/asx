@@ -9,10 +9,13 @@ type FooterProps = {
 };
 
 export default function Footer({ email, links }: FooterProps) {
-  // 按 order 字段排序链接
-  const sortedLinks = [...links].sort(
-    (a, b) => a.attributes.order - b.attributes.order,
-  );
+  // 更新排序逻辑
+  const sortedLinks = [...links].sort((a, b) => {
+    if (a.order === null) return 1;
+    if (b.order === null) return -1;
+
+    return parseInt(a.order) - parseInt(b.order);
+  });
 
   return (
     <footer className="w-full flex items-center justify-center py-3">
@@ -23,15 +26,15 @@ export default function Footer({ email, links }: FooterProps) {
               <NextUILink
                 key={link.id}
                 className="group relative inline-flex items-center overflow-hidden rounded border border-current px-8 py-3 text-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
-                href={link.attributes.url}
+                href={link.url}
                 rel="noopener noreferrer"
-                target={link.attributes.target ? "_blank" : "_self"}
+                target="_blank" // 假设所有链接都在新窗口打开
               >
                 <span className="absolute -start-full transition-all group-hover:start-4">
                   <BsForwardFill />
                 </span>
                 <span className="text-sm font-medium transition-all group-hover:ms-4">
-                  {link.attributes.name}
+                  {link.name}
                 </span>
               </NextUILink>
             ))
@@ -40,8 +43,8 @@ export default function Footer({ email, links }: FooterProps) {
           )}
         </div>
         <div className="text-center text-gray-600 dark:text-gray-400">
-          © {new Date().getFullYear()} 爱上性视频网站. All rights
-          reserved.邮箱:{email}
+          © {new Date().getFullYear()} 爱上性视频网站. All rights reserved.
+          邮箱:{email}
         </div>
       </div>
     </footer>

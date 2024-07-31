@@ -5,8 +5,8 @@ import {
   NavbarBrand,
   NavbarItem,
 } from "@nextui-org/navbar";
+import { Avatar } from "@nextui-org/avatar";
 import NextLink from "next/link";
-import Image from "next/image";
 import React from "react";
 
 import { ThemeSwitch } from "@/components/theme-switch";
@@ -27,16 +27,7 @@ export const Navbar: React.FC<NavbarProps> = ({ categories }) => {
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <span className="flex relative justify-center items-center box-border overflow-hidden align-middle z-0 outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 w-10 h-10 text-tiny bg-default text-default-foreground rounded-small">
-              <Image
-                alt="avatar"
-                className="flex object-cover w-full h-full transition-opacity !duration-500 opacity-0 data-[loaded=true]:opacity-100"
-                data-loaded="true"
-                height={256}
-                src="/logo.webp"
-                width={256}
-              />
-            </span>
+            <Avatar isBordered radius="sm" src="/logo.webp" />
           </NextLink>
         </NavbarBrand>
         <ul className="hidden lg:flex gap-4 justify-start ml-2">
